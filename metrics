@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#CPU
+
+cpu_usage () {
+
+IDLE=$(top -n 1 -b | grep -i cpu\(s\) | sed 's/^.*://' | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
+           awk '{print $1"%"}')
+
+USER=$(top -n 1 -b | grep -i cpu\(s\) | sed 's/^.*://' | sed "s/.*, *\([0-9.]*\)%* us.*/\1/" |\
+           awk '{print $1"%"}')
+
+IOWAIT=$(top -n 1 -b | grep -i cpu\(s\) | sed 's/^.*://' | sed "s/.*, *\([0-9.]*\)%* wa.*/\1/" |\
+           awk '{print $1"%"}')
+
+STOLEN=$(top -n 1 -b | grep -i cpu\(s\) | sed 's/^.*://' | sed "s/.*, *\([0-9.]*\)%* st.*/\1/" |\
+           awk '{print $1"%"}')
+
+SYSTEM=$(top -n 1 -b | grep -i cpu\(s\) | sed 's/^.*://' | sed "s/.*, *\([0-9.]*\)%* sy.*/\1/" |\
+           awk '{print $1"%"}')
+
+echo "Idle cpu usage - $IDLE"
+echo "User cpu usage - $USER"
+echo "Input or output operations cpu usage - $IOWAIT"
+echo "Stolen cpu usage - $USER"
+echo "System cpu usage - $SYSTEM"
+}
+
+#MEMORY
+
+memory_usage () {
+
+line=$(free | grep -i 'Mem')
+
+arr=(`echo ${line}`);
+
+echo "Virtual total memory - ${arr[1]} KiB"
+echo "Virtual used memory - ${arr[2]} KiB"
+echo "Virtual free memory - ${arr[3]} KiB"
+echo "Virtual shared memory - ${arr[4]} KiB"
+
+}
+
+#Selection
+
+if [[ "$1" == "cpu" ]]; then
+cpu_usage
+elif [[ "$1" == "mem" ]]; then
+memory_usage
+else
+echo "Please add what metrics to show? cpu or mem"
+fi
