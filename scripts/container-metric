@@ -41,22 +41,13 @@ echo "Virtual shared memory - ${arr[4]} KiB"
 
 }
 
-#Selection
-echo "Select what metric to show"
-
-PS3="metric (1-2): "
-
-select metric in "mem" "cpu"
-do
-    if [[ -z $metric ]]; then
-        echo "Invalid choice: '$REPLY'" >&2
-    else
-        break
-    fi
-done
-if
-    [[ "$metric" == "cpu" ]]; then
+if [ -z $1 ]; then
+    echo "Please pass to container argument with correct name what metrics to show? cpu or mem"
+    elif
+    [[ "$1" == "cpu" ]]; then
     cpu_usage
-    elif [[ "$metric" == "mem" ]]; then
+    elif [[ "$1" == "mem" ]]; then
     memory_usage
+    else
+    echo "Please pass to container argument with correct name what metrics to show? cpu or mem"
 fi
